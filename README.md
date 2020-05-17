@@ -1,6 +1,16 @@
 # Easynote
 Easynote is a web application dedicated to privacy. Keep your data safe with Easynote.
 
+# Encryption
+* pbkdf2-hmac used to derive a master key from your password,
+* aes-512 used to encrypt your notes.
+
+# How it works ?
+We derive a master key from your password and we store it in your session. When you create a new Note, a random symetric key is generated then it used with AES-512 algorithm to encrypt your note. Finally, we encrypt your symetric key with your master key and AES-512 algorithm.
+
+Keys and Notes are encrypted and stored in database. So, you are the only person who can decrypt your notes.
+Important note, if you lost your password. We'll not able to recover it and all of your notes 'll be deleted.
+
 ## Usage
 1. Register new user (you'll automatically redirect to /Dashboard/ page).
 2. Create new Notes :
