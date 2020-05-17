@@ -49,6 +49,16 @@ python manage.py runserver
 
 6. Open your browser then browse to "localhost:8000"
 
+## Features
+- Register new users,
+- Create new encrypted notes,
+- Edit your notes,
+- View your notes,
+- Delete your notes,
+- Export all notes in .json format,
+- Change your password,
+- Delete your account.
+
 ## Built With
 
 * [Python] 
