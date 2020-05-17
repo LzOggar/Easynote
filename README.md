@@ -2,26 +2,21 @@
 Easynote is a web application dedicated to privacy. Keep your data safe with Easynote.
 
 ## Usage
-```
 1. Register new user (you'll automatically redirect to /Dashboard/ page).
 2. Create new Notes :
 - Set the name,
 - Set the content,
 - Click on the button Save.
-```
 
 ### Installing
-
 1. Create a new project with django-admin
 ```
 django-admin startproject Test
 ```
-
 2. Clone the repository in the new django project
 ```
 git clone https://github.com/LzOggar/Easynote
 ```
-
 3. Add the following configuration to Test/settings.py file
 ```
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
