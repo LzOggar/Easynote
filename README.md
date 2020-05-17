@@ -8,31 +8,49 @@ Easynote is a web application dedicated to privacy. Keep your data safe with Eas
 
 ### Installing
 
-1. Create a new project with command
+1. Create a new project with django-admin
 ```
 django-admin startproject Test
 ```
 
-2. Clone the repository with command
+2. Clone the repository in the new django project
 ```
 git clone https://github.com/LzOggar/Easynote
 ```
 
-3. Copty
-
-## Running the tests
-
-Use the following command to check the script working correctly :
-
+3. Add the following configuration to Test/settings.py file
 ```
-chmod +x LakkaTOR.sh
-./LakkaTOR.sh --help
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+...
+INSTALLED_APPS = [
+    '...',
+    'Easynote'
+]
+...
+LOGIN_URL='/login/'
+...
+STATIC_ROOT = os.path.join(BASE_DIR, 'Easynote/static')
 ```
+
+4. Create the database db.sqlite3
+```
+python manage.py makemigrations Easynote
+python manage.py migrate
+```
+
+5. Run the test
+```
+python manage.py runserver
+```
+
+6. Open your browser then browse to "localhost:8000"
 
 ## Built With
 
-* [Bash] : Bash is a Unix shell and command language written by Brian Fox for the GNU Project as a free software replacement for the Bourne shell. See "https://en.wikipedia.org/wiki/Bash_(Unix_shell).
-* [Lakka] : Lakka is a lightweight Linux distribution that transforms a small computer into a full blown retrogaming console. See "http://www.lakka.tv".
+* [Python] 
+* [Django] 
+* [TinyMCE]
+* [HighCharts]
 
 ## License
 
@@ -40,7 +58,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Authors
 
-**LzOggar** - CyberSecurity student
-
-## Contributing
-Make pull request or suggest me improvements.
+**LzOggar**
