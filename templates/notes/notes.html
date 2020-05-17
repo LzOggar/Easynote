@@ -1,0 +1,160 @@
+{% extends "menu.html" %}
+{% load static %}
+{% load tags %}
+
+{% block title %}Notes{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row" style="margin-top: 25px;">
+      <nav>
+        <form style="float: left; margin-right: 15px;">
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fa fa-search"></i></div>
+              </div>
+              <input class="form-control" type="text" placeholder="Search" aria-label="Search" id="search-note-by-name">
+            </div>
+          </div>
+        </form>
+
+        <ul class="pagination justify-content-end">
+          {% if notes.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="{% url 'view_available_notes' %}?page=1"><i class="fa fa-angle-double-left"></i></a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="{% url 'view_available_notes' %}?page={{ notes.previous_page_number }}"><i class="fa fa-angle-left"></i></a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link"><i class="fa fa-angle-double-left"></i></a>
+            </li>
+            <li class="page-item disabled">
+              <a class="page-link"><i class="fa fa-angle-left"></i></a>
+            </li>
+          {% endif %}
+            <li class="page-item">
+              <a class="page-link" id="page-link-index">{{ notes.number }} / {{ notes.paginator.num_pages }}</a>
+            </li>
+          {% if notes.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="{% url 'view_available_notes' %}?page={{ notes.next_page_number }}"><i class="fa fa-angle-right"></i></a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="{% url 'view_available_notes' %}?page={{ notes.paginator.num_pages }}"><i class="fa fa-angle-double-right"></i></a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link"><i class="fa fa-angle-right"></i></a>
+            </li>
+            <li class="page-item disabled">
+              <a class="page-link"><i class="fa fa-angle-double-right"></i></a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="row">
+      <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col"><i class="fa fa-hashtag"></i></th>
+            <th scope="col">Names</th>
+            <th scope="col">Published dates</th>
+            <th scope="col">Updated dates</th>
+            <th scope="col">Edit</th>
+            <th scope="col">View</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody id="table-tbody">
+          {% for el in notes %}
+            <tr class="table-light">
+              <td scope="row">{{ forloop.counter }}</td>
+              <td>{{ el.name|capfirst }}</td>
+							<td>{{ el.published_date|date:"N d, Y, H:i A." }}</td>
+							<td>{{ el.updated_date|date:"N d, Y, H:i A." }}</td>
+              <td>
+                <a class="btn btn-primary" href="/dashboard/notes/edit/{{ el.name }}/"><i class="fa fa-edit"></i></a>
+              </td>
+              <td>
+                <a class="btn btn-primary" href="/dashboard/notes/view/{{ el.name }}/"><i class="fa fa-search"></i></a>
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-{{ forloop.counter }}"><i class="fa fa-trash"></i></button>
+                <div class="modal fade" id="delete-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title"><i class="fa fa-trash"></i> Do you want delete "{{ el.name|capfirst }}" note ?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="{% url 'delete_current_note' %}" method="post">
+                          {% csrf_token %}
+                          <input type="text" name="name" value="{{ el.name }}" hidden="" required="">
+                          <div class="form-group text-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-check"></i> Yes</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% if messages|length > 0 %}
+    <script type="text/javascript">
+      $(function() {
+        {% for message in messages %}
+          {% if "notes" == message.tags|xsplit:0 %}
+            Topper({
+              "title":"",
+              "text":"<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>",
+              "style":"danger",
+              "type":"top",
+              "autoclose":true,
+              "autocloseAfter":3000
+            });
+          {% endif %}
+        {% endfor %}
+      });
+    </script>
+  {% endif %}
+
+  <script type="text/javascript">
+    $(function() {
+      $("#search-note-by-name").on("keyup", function() {
+        var v = $(this).val();
+        $.ajax({
+              url: "{% url 'search_note' %}",
+              data: { "query": v },
+              dataType: "json",
+              success: function(array) {
+                $("#table-tbody").html(function() {
+                  var html = "";
+                  var counter = 1;
+                  array.notes.forEach(function(e) {
+                    html += "<tr class='table-light'><td scope='row'>" + counter + "</td><td>" + e.name.charAt(0).toUpperCase() + e.name.slice(1) + "</td><td>" + e.published_date + "</td><td>" + e.updated_date + "</td><td><button type='button' class='btn btn-primary' onclick=\"window.open('/dashboard/notes/edit/" + e.name + "/');\"><i class='fa fa-edit'></i></button></td><td><button type='button' class='btn btn-primary' onclick=\"window.open('/dashboard/notes/view/" + e.name + "/');\"><i class='fa fa-search'></i></button></td><td><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delete_note_" + counter + "'><i class='fa fa-trash'></i></button><div class='modal fade' tabindex='-1' role='dialog' id='delete_note_" + counter + "'><div class='modal-dialog modal-dialog-centered' role='document'><div class='modal-content'><div class='modal-header'><h5 class='modal-title font-weight-bold'><i class='fa fa-trash'></i> Do you want delete \"" + e.name + "\" note ?</h5><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div><div class='modal-body'><form action=\"{% url 'delete_current_note' %}\" method='post'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'><input type='text' name='name' value='" + e.name + "' hidden='' required=''><div class='form-group text-center'><button type='button' class='btn btn-secondary' data-dismiss='modal' style='margin-right: 5px;'><i class='fa fa-close'></i> Cancel</button><button type='submit' class='btn btn-danger'><i class='fa fa-check'></i> Yes</button></div></form></div></div></div></div></td></tr>";
+                    counter += 1;
+                  });
+                  return html;
+                });
+              }
+          });
+      });
+    });
+  </script>
+{% endblock %}

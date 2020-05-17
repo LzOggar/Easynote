@@ -1,0 +1,318 @@
+{% extends "menu.html" %}
+{% load static %}
+{% load tags %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block css %}
+  <style type="text/css">
+  	h1 {
+  		color: #fff;
+  	}
+
+    .card { 
+    	border-radius: 0;
+    	margin-bottom: 20px;
+    }
+
+    .bs-callout {
+    	background-color: #fff;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row justify-content-around">
+			<div class="bs-callout bs-callout-primary">
+				<div class="h1" style="color: #428bca;">
+					<i class="fa fa-sticky-note"></i> 
+					<span id="notes-count"></span>
+				</div>
+				<hr>
+				<center>
+					<span class="text-muted">Notes</span>
+				</center>
+			</div>
+			<div class="bs-callout bs-callout-info" style="margin-top: 20px;">
+				<div class="h1" style="color: #5bc0de;">
+					<i class="fa fa-eye"></i> 
+					<span id="notes-views"></span>
+				</div>
+				<hr>
+				<center>
+					<span class="text-muted">Views</span>
+				</center>
+			</div>
+			<div class="bs-callout bs-callout-success" style="margin-top: 20px;">
+				<div class="h1" style="color: #5cb85c;">
+					<i class="fa fa-edit"></i> 
+					<span id="notes-changes"></span>
+				</div>
+				<hr>
+				<center>
+					<span class="text-muted">Changes</span>
+				</center>
+			</div>
+			<div class="bs-callout bs-callout-warning" style="margin-top: 20px;">
+				<div class="h1" style="color: #f0ad4e;">
+					<i class="fa fa-share"></i> 
+					<span id="notes-exports"></span>
+				</div>
+				<hr>
+				<center>
+					<span class="text-muted">Exports</span>
+				</center>
+			</div>
+		</div>
+		
+		<div class="row justify-content-around">
+			<div class="col-6">
+				<div class="input-group" style="margin-bottom: 20px;">
+					<div class="input-group-prepend">
+						<div class="input-group-text">
+							<i class="fa fa-filter"></i>
+						</div>
+					</div>
+					<select id="filter-by-months" class="form-control">
+						<option value="1">1 Month</option> 
+						<option value="3">3 Months</option>
+						<option value="6">6 Months</option>
+						<option value="12" selected>12 Months</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="row justify-content-around">
+			<div class="col-6">
+				<div class="card text-center">
+					<div class="card-body">
+						<div class="card-text" id="created-notes">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-6">
+				<div class="card text-center">
+					<div class="card-body">
+						<div class="card-text" id="viewed-notes">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	{% if messages|length > 0 %}
+	    <script type="text/javascript">
+	      $(function() {
+	        {% for message in messages %}
+	          {% if "statistics" == message.tags|xsplit:0 %}
+	            Topper({
+	              "title":"",
+	              "text":"<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>",
+	              "style":"danger",
+	              "type":"top",
+	              "autoclose":true,
+	              "autocloseAfter":3000
+	            });
+	          {% endif %}
+	        {% endfor %}
+	      });
+	    </script>
+	{% endif %}
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$.ajax({
+				url: "{% url 'get_statistics' %}",
+				data: { "months": 12 },
+				dataType: "json",
+				success: function(array) {
+					$("#notes-count").text(array.notes_count);
+					$("#notes-views").text(array.views);
+					$("#notes-changes").text(array.changes);
+					$("#notes-exports").text(array.exports);
+
+					var data = [];
+					var categories = [];
+
+					array.notes.forEach(function(e) {
+						data.push([e.published_date, 1]);
+						categories.push(e.name)
+					});
+
+			        var chart_created_notes = Highcharts.chart("created-notes", {
+			            chart: {
+			                type: "column"
+			            },
+			            title: {
+			                text: "Notes created in last 12 Months"
+			            },
+			            xAxis: {
+					        type: "category",
+					        labels: {
+					            rotation: -45,
+					            style: {
+					                fontSize: "13px",
+					                fontFamily: "Verdana, sans-serif"
+					            }
+					        },
+					        categories: categories
+					    },
+			            yAxis: {
+					        visible: false
+					    },
+					    legend: {
+					        enabled: false
+					    },
+			            series: [{ "name":"Notes",
+			        				"data": data }]
+			        });
+
+			        var data = [];
+
+			        array.notes.forEach(function(e) {
+			        	var value = (e.views / array.views) * 100;
+			        	console.log(e.views, array.views, value);
+						data.push([e.name, value]);
+					});
+
+			        var chart_viewed_notes = Highcharts.chart("viewed-notes", {
+			        	chart: {
+					        plotBackgroundColor: null,
+					        plotBorderWidth: null,
+					        plotShadow: false,
+					        type: "pie"
+					    },
+					    title: {
+					        text: "Notes viewed in last 12 Months"
+					    },
+					    tooltip: {
+					        pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
+					    },
+					    accessibility: {
+					        point: {
+					            valueSuffix: "%"
+					        }
+					    },
+					    plotOptions: {
+					        pie: {
+					            allowPointSelect: true,
+					            cursor: "pointer",
+					            dataLabels: {
+					                enabled: true,
+					                format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+					            }
+					        }
+					    },
+					    series: [{
+					        name: "Notes",
+					        colorByPoint: true,
+					        data: data
+					    }]
+			        });
+              	}
+            });
+		});
+
+		$(function() {
+			$("#filter-by-months").on("change", function() {
+		        var v = $(this).val();
+		        $.ajax({
+					url: "{% url 'get_statistics' %}",
+					data: { "months": v },
+					dataType: "json",
+					success: function(array) {
+						$("#notes-count").text(array.notes_count);
+		              	$("#notes-views").text(array.views);
+		              	$("#notes-changes").text(array.changes);
+		              	$("#notes-exports").text(array.exports);
+
+		              	var data = [];
+						var categories = [];
+
+						array.notes.forEach(function(e) {
+							data.push([e.published_date, 1]);
+							categories.push(e.name)
+						});
+
+		              	var chart_created_notes = Highcharts.chart("created-notes", {
+				            chart: {
+				                type: "column"
+				            },
+				            title: {
+				                text: "Notes created in last ".concat(v).concat(" Months")
+				            },
+				            xAxis: {
+						        type: "category",
+						        labels: {
+						            rotation: -45,
+						            style: {
+						                fontSize: "13px",
+						                fontFamily: "Verdana, sans-serif"
+						            }
+						        },
+						        categories: categories
+						    },
+				            yAxis: {
+						        visible: false
+						    },
+						    legend: {
+						        enabled: false
+						    },
+				            series: [ { "name":"Notes",
+				        				"data": data } ]
+				        });
+
+				        var data = [];
+
+				        array.notes.forEach(function(e) {
+				        	var value = (e.views / array.views) * 100;
+				        	console.log(e.views, array.views, value);
+							data.push([e.name, value]);
+						});
+
+				        var chart_viewed_notes = Highcharts.chart("viewed-notes", {
+				        	chart: {
+						        plotBackgroundColor: null,
+						        plotBorderWidth: null,
+						        plotShadow: false,
+						        type: "pie"
+						    },
+						    title: {
+						        text: "Notes viewed in last ".concat(v).concat(" Months")
+						    },
+						    tooltip: {
+						        pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
+						    },
+						    accessibility: {
+						        point: {
+						            valueSuffix: "%"
+						        }
+						    },
+						    plotOptions: {
+						        pie: {
+						            allowPointSelect: true,
+						            cursor: "pointer",
+						            dataLabels: {
+						                enabled: true,
+						                format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+						            }
+						        }
+						    },
+						    series: [{
+						        name: "Notes",
+						        colorByPoint: true,
+						        data: data
+						    }]
+				        });
+					}
+		        })
+		    });
+		});
+	</script>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "menu.html" %}
+{% load static %}
+{% load tags %}
+
+{% block title %}Profile{% endblock %}
+
+{% block css %}
+	<style type="text/css">
+		h1 {
+			color: #fff;
+		}
+
+		.card {
+			border-radius: 0;
+		}
+
+		.card-header, .card-footer {
+    		border-radius: 0 !important;
+    		background-color: #343a40;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+  	<div class="row justify-content-center" style="margin-top: 25px;">
+		<div class="card">
+			<div class="card-header text-center">
+				<h1>{{ user.username }}</h1>
+			</div>
+			<div class="card-body">
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<i class="fa fa-tag"></i>
+							</div>
+						</div>
+						<span class="form-control">{{ user.username }}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<i class="fa fa-clock-o"></i>
+							</div>
+						</div>
+						<span class="form-control">{{ user.last_login|date:"N d, Y, H:i A." }}</span>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer text-center">
+				<button type="button" class="btn btn-primary" onclick="window.open('/dashboard/profile/export/')"><i class="fa fa-share"></i> Export all notes</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#change-password"><i class="fa fa-repeat"></i> Change your password</button>
+                <div class="modal fade" id="change-password" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title"><i class="fa fa-repeat"></i> Change your password</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="{% url 'change_current_password' %}" method="post">
+                          	{% csrf_token %}
+                          	<div class="form-group">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<div class="input-group-text">
+											<i class="fa fa-lock"></i>
+										</div>
+									</div>
+									<input type="password" class="form-control" id="id_current_password" name="current_password" value="" required="" placeholder="Current password">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<div class="input-group-text">
+											<i class="fa fa-lock"></i>
+										</div>
+									</div>
+									<input type="password" class="form-control" id="id_new_password" name="new_password" value="" required="" placeholder="New password">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<div class="input-group-text">
+											<i class="fa fa-check"></i>
+										</div>
+									</div>
+									<input type="password" class="form-control" id="id_confirm_password" name="confirm_password" value="" required="" placeholder="Confirm password">
+								</div>
+							</div>
+                          	<input type="text" name="username" value="{{ user.username }}" hidden="" required="">
+							<div class="form-group text-center">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+								<button type="submit" class="btn btn-danger"><i class="fa fa-check"></i> Yes</button>
+							</div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-account"><i class="fa fa-trash"></i> Delete your account</button>
+                <div class="modal fade" id="delete-account" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title"><i class="fa fa-trash"></i> Do you want delete your account ?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="{% url 'delete_current_account' %}" method="post">
+                          {% csrf_token %}
+                          <input type="text" name="username" value="{{ user.username }}" hidden="" required="">
+                          <div class="form-group text-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-check"></i> Yes</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+			</div>
+		</div>
+  	</div>
+  </div>
+{% endblock %}
+
+{% block js %}
+	{% if messages|length > 0 %}
+		<script type="text/javascript">
+			$(function() {
+				{% for message in messages %}
+					{% if "profiles" == message.tags|xsplit:0 %}
+						Topper({
+							"title":"",
+							"text":"<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>",
+							"style":"danger",
+							"type":"top",
+							"autoclose":true,
+							"autocloseAfter":3000
+						});
+					{% endif %}
+				{% endfor %}
+			});
+		</script>
+	{% endif %}
+{% endblock %}

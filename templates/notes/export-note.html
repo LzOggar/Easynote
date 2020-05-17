@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ note.name|capfirst }}</title>
+</head>
+<body>
+	<div class="container">
+		<div class="row justify-content-center" style="margin-top: 25px;">
+			<div class="card">
+				<!--<div class="card-header"><h1></h1></div>-->
+				<div class="card-body">
+					{% autoescape off %}
+						{{ summary }}
+					{% endautoescape %}
+				</div>
+				<div class="card-footer">
+					<span><strong>Name: </strong>{{ note.name|capfirst }}</span>
+					<br>
+					<span><strong>Author: </strong>{{ note.user.username }}</span>
+					<br>
+					<span><strong>Last update: </strong>{{ note.updated_date|date:"N d, Y, H:i A." }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

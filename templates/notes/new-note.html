@@ -1,0 +1,107 @@
+{% extends "menu.html" %}
+{% load static %}
+{% load tags %}
+
+{% block title %}New note{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center" style="margin-top: 25px;">
+      <form action="" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group">
+            {% if field.name == "name" %}
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-tag"></i>
+                  </div>
+                </div>
+                {{ field }}
+              </div>
+            {% else %}
+              <div class="input-group" id="id_summary_error">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-file-text-o"></i>
+                  </div>
+                </div>
+                {{ field }}
+              </div>
+            {% endif %}
+            {% if messages|length > 0 %}
+              {% for message in messages %}
+                {% if "name" == message.tags|xsplit:0 %}
+                  <script type="text/javascript">
+                    $("#id_name").attr("data-toggle","tooltip");
+                    $("#id_name").attr("data-placement","top");
+                    $("#id_name").attr("data-html","true");
+                    $("#id_name").attr("title","<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>");
+                    $("#id_name").tooltip();
+                  </script>
+                {% else %}
+                  <script type="text/javascript">
+                    $("#id_summary_error").attr("data-toggle","tooltip");
+                    $("#id_summary_error").attr("data-placement","top");
+                    $("#id_summary_error").attr("data-html","true");
+                    $("#id_summary_error").attr("title","<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>");
+                    $("#id_summary_error").tooltip();
+                  </script>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endfor %}
+        <div class="form-group text-center">
+          <a class="btn btn-secondary" href="{% url 'view_available_notes' %}"><i class="fa fa-times"></i> Cancel</a>
+          <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript">
+    tinymce.init({ 
+      selector: "textarea",
+      height: 400,
+      menubar: false,
+      setup: function (editor) {
+            editor.on("change", function () {
+                editor.save();
+            });
+        },
+      plugins: [
+        "advlist autolink charmap",
+        "lists link searchreplace hr",
+        "fullscreen table paste help wordcount"
+      ],
+      toolbar: "undo redo | formatselect | " +
+        "fontsizeselect bold italic underline charmap | " + 
+        "forecolor backcolor | " +
+        "alignleft aligncenter alignright alignjustify | " +
+        "hr table bullist numlist | fullscreen help"
+    });
+  </script>
+  
+  {% if messages|length > 0 %}
+    <script type="text/javascript">
+      $(function() {
+        {% for message in messages %}
+          {% if "notes" == message.tags|xsplit:0 %}
+            Topper({
+              "title":"",
+              "text":"<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>",
+              "style":"danger",
+              "type":"top",
+              "autoclose":true,
+              "autocloseAfter":3000
+            });
+          {% endif %}
+        {% endfor %}
+      });
+    </script>
+  {% endif %}
+{% endblock %}

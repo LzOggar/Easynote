@@ -1,0 +1,72 @@
+{% extends "menu.html" %}
+{% load static %}
+{% load tags %}
+
+{% block css %}
+  <style type="text/css">
+    h3 {
+      color: #fff;
+    }
+
+    .card {
+      border-radius: 0;
+    }
+
+    .card-header {
+        border-radius: 0 !important;
+        background-color: #343a40;
+    }
+  </style>
+{% endblock %}
+
+{% block title %}{{ note.name|capfirst }}{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center" style="margin-top: 25px;">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row justify-content-between">
+              <h3 style="margin-left: 15px !important;"><i class="fa fa-tag"></i> {{ note.name|capfirst }}</h3>
+              <button type="button" class="btn btn-success" style="margin-right: 15px !important;" onclick="window.open('/dashboard/notes/export/{{ note.name }}/')"><i class="fa fa-file-pdf-o"></i> Export</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+              {% autoescape off %}
+                {{ summary }}
+              {% endautoescape %}
+            </p>
+            <hr>
+            <span>
+              <i class="fa fa-clock-o"></i>
+              <strong>Last update :</strong> {{ note.updated_date|date:"N d, Y, H:i A." }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% if messages|length > 0 %}
+    <script type="text/javascript">
+      $(function() {
+        {% for message in messages %}
+          {% if "notes" == message.tags|xsplit:0 %}
+            Topper({
+              "title":"",
+              "text":"<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>",
+              "style":"danger",
+              "type":"top",
+              "autoclose":true,
+              "autocloseAfter":3000
+            });
+          {% endif %}
+        {% endfor %}
+      });
+    </script>
+  {% endif %}
+{% endblock %}
