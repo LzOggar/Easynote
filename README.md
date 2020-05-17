@@ -1,6 +1,6 @@
 # Easynote
 Easynote is a web application dedicated to privacy. Keep your data safe with Easynote.
-![alt text]()
+![alt text](https://github.com/LzOggar/Easynote/blob/master/Images/Screenshot_2020-05-17%20Login.png)
 
 # Encryption
 * PBKDF2-HMAC used to derive a master key from your password,
