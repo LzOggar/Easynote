@@ -692,6 +692,10 @@ def delete_current_account(request):
 @require_http_methods("GET")
 def get_statistics(request):
 	"""
+		get_statistics view. Get notes statistics (changes, views, exports, etc.)
+		:param request: HttpRequest instance. Must be a HttpRequest class.
+		:return: JsonResponse instance.
+		:rtype: JsonResponse class.
 	"""
 
 	if request.is_ajax():
