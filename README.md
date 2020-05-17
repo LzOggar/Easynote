@@ -3,7 +3,11 @@ Easynote is a web application dedicated to privacy. Keep your data safe with Eas
 
 ## Usage
 ```
-
+1. Register new user (you'll automatically redirect to /Dashboard/ page).
+2. Create new Notes :
+* Set the name,
+* Set the content,
+* Click on the button Save.
 ```
 
 ### Installing
