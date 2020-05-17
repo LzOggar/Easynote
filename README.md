@@ -67,10 +67,10 @@ python manage.py runserver
 
 ## Built With
 
-* [Python] 
-* [Django] 
-* [TinyMCE]
-* [HighCharts]
+* Python: https://www.python.org/
+* Django: https://www.djangoproject.com/
+* TinyMCE: https://www.tiny.cloud/
+* HighCharts: https://www.highcharts.com/
 
 ## License
 
