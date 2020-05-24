@@ -53,10 +53,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'Easynote/static')
 ```
 ...
 from django.conf.urls import include
+from Easynote import views
 ...
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('Easynote.urls'))
+    path('login/', views.login, name='login'),
+    path('about/', views.about, name='about'),
+    path('dashboard/', include('Easynote.urls'))
 ]
 ```
 7. Create the database db.sqlite3
