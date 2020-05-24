@@ -40,7 +40,7 @@ LOGIN_URL='/login/'
 ...
 STATIC_ROOT = os.path.join(BASE_DIR, 'Easynote/static')
 ```
-4. Add the following configuration to Test/urls.py
+4. Add the following configuration to Test/urls.py file
 ```
 ...
 from django.conf.urls import include
