@@ -58,6 +58,7 @@ from Easynote import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', views.login, name='login'),
+    path('register/', views.register, name='register'),
     path('about/', views.about, name='about'),
     path('dashboard/', include('Easynote.urls'))
 ]
