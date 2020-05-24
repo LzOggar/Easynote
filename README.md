@@ -40,19 +40,23 @@ LOGIN_URL='/login/'
 ...
 STATIC_ROOT = os.path.join(BASE_DIR, 'Easynote/static')
 ```
+4. Add the following configuration to Test/urls.py
+```
 
-4. Create the database db.sqlite3
+```
+
+5. Create the database db.sqlite3
 ```
 python manage.py makemigrations Easynote
 python manage.py migrate
 ```
 
-5. Run the test
+6. Run the test
 ```
 python manage.py runserver
 ```
 
-6. Open your browser then browse to "localhost:8000"
+7. Open your browser then browse to "localhost:8000"
 
 ## Features
 - Register new users,
