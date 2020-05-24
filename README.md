@@ -42,6 +42,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'Easynote/static')
 ```
 4. Add the following configuration to Test/urls.py
 ```
+...
+from django.conf.urls import include
+...
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('Easynote.urls'))
+]
+...
 
 ```
 
