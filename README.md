@@ -49,8 +49,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Easynote.urls'))
 ]
-...
-
 ```
 
 5. Create the database db.sqlite3
