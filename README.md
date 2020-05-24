@@ -20,19 +20,23 @@ Important note, if you lost your password. We'll not able to recover it and all 
 
 ### Installing
 The project has been developed with Python3. You need to set up everything under Python3.
-1. Set up requirements
-```
-pip3 install -r Easynote/requirements.txt
-```
-2. Create a new project with django-admin
-```
-django-admin startproject Test
-```
-3. Clone the repository in the new django project
+1. Clone the repository
 ```
 git clone https://github.com/LzOggar/Easynote
 ```
-4. Add the following configuration to Test/settings.py file
+2. Set up requirements
+```
+pip3 install -r Easynote/requirements.txt
+```
+3. Create a new project with django-admin
+```
+django-admin startproject Test
+```
+4. Copy Easynote folder in Test project
+```
+cp -r Easynote Test
+```
+5.Add the following configuration to Test/settings.py file
 ```
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 ...
@@ -45,7 +49,7 @@ LOGIN_URL='/login/'
 ...
 STATIC_ROOT = os.path.join(BASE_DIR, 'Easynote/static')
 ```
-5. Add the following configuration to Test/urls.py file
+6. Add the following configuration to Test/urls.py file
 ```
 ...
 from django.conf.urls import include
@@ -55,16 +59,16 @@ urlpatterns = [
     path('', include('Easynote.urls'))
 ]
 ```
-6. Create the database db.sqlite3
+7. Create the database db.sqlite3
 ```
 python manage.py makemigrations Easynote
 python manage.py migrate
 ```
-7. Run the test
+8. Run the test
 ```
 python manage.py runserver
 ```
-8. Open your browser then browse to "localhost:8000"
+9. Open your browser then browse to "localhost:8000"
 
 ## Features
 - Register new users,
