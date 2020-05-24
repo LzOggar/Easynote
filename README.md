@@ -19,6 +19,12 @@ Important note, if you lost your password. We'll not able to recover it and all 
 - Click on the button Save.
 
 ### Installing
+The project has been developed with Python3. You need to set up everything under Python3.
+0. Set up requirements
+```
+pip3 install -r Easynote/requirements.txt
+```
+
 1. Create a new project with django-admin
 ```
 django-admin startproject Test
