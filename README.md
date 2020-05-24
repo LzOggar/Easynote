@@ -36,7 +36,7 @@ django-admin startproject Test
 ```
 cp -r Easynote Test
 ```
-5.Add the following configuration to Test/settings.py file
+5. Add the following configuration to Test/settings.py file
 ```
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 ...
