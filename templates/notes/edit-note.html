@@ -40,7 +40,7 @@
                     $("#id_name").attr("title","<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>");
                     $("#id_name").tooltip();
                   </script>
-                {% else %}
+                {% elif "summary" == message.tags|xsplit:0 %}
                   <script type="text/javascript">
                     $("#id_summary_error").attr("data-toggle","tooltip");
                     $("#id_summary_error").attr("data-placement","top");
