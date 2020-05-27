@@ -19,6 +19,43 @@ from Easynote.lib import const, aes
 import binascii, bleach, io, json
 
 # Create your views here.
+def handler403(request, *args, **kwargs):
+	"""
+		handler403 view. Handle 403 Http error and render 403 error page.
+		:param request: HttpRequest instance. Must be HttpRequest class.
+		:param *args: List instance. Must be a List class.
+		:param **kwargs: Dict instance. Must be a Dict class.
+		:rtype: HttpResponse class.
+		:return: HttpResponse.
+	"""
+
+	return render(request, "errors/403.html", {})
+
+@require_http_methods("GET")
+def handler404(request, *args, **kwargs):
+	"""
+		handler404 view. Handle 404 Http error and render 404 error page.
+		:param request: HttpRequest instance. Must be HttpRequest class.
+		:param *args: List instance. Must be a List class.
+		:param **kwargs: Dict instance. Must be a Dict class.
+		:rtype: HttpResponse class.
+		:return: HttpResponse.
+	"""
+
+	return render(request, "errors/404.html", {})
+
+@require_http_methods("GET")
+def handler500(request, *args, **kwargs):
+	"""
+		handler500 view. Handle 500 Http error and render 500 error page.
+		:param request: HttpRequest instance. Must be HttpRequest class.
+		:param *args: List instance. Must be a List class.
+		:param **kwargs: Dict instance. Must be a Dict class.
+		:rtype: HttpResponse class.
+		:return: HttpResponse.
+	"""
+
+	return render(request, "errors/500.html", {})
 
 @require_http_methods("GET")
 def index(request):
