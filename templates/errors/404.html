@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block css %}
+	<style type="text/css">
+		body {
+			background-image: url("{% static 'img/background.jpg' %}");
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			background-size: cover;
+		}
+		
+		.container {
+			margin-top: 10%;
+		}
+
+		.col-6 {
+			padding-top: 2%;
+			padding-bottom: 2%;
+			background-color: #343a40;
+			-webkit-box-shadow: 0px 0px 13px 2px rgba(0,0,0,0.75);
+			-moz-box-shadow: 0px 0px 13px 2px rgba(0,0,0,0.75);
+			box-shadow: 0px 0px 13px 2px rgba(0,0,0,0.75);
+		}
+
+		.blockquote span { font-weight: bold; font-size: 22px; }
+	</style>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-6">
+				<blockquote class="blockquote text-center">
+					<img src="{% static 'img/logo.png' %}" width="60" height="55">
+					<span class="mb-0" style="color: #fff;">Easynote</span>
+					<footer class="blockquote-footer">Keep your data safe with encrypted note.</footer>
+					<hr>
+					<h1 style="color: #fff;"><i class="fa fa-question-circle"></i> Page not found</h1>
+					<br>
+					<span class="font-italic" style="color: #fff;">You will be redirect in 5s.</span>
+				</blockquote>
+			</div>
+			<div class="col"></div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		setTimeout(function() {
+			window.location = "{% url 'login' %}";
+		}, 5000);
+	</script>
+{% endblock %}
