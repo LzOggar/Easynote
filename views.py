@@ -19,6 +19,7 @@ from Easynote.lib import const, aes
 import binascii, bleach, io, json
 
 # Create your views here.
+@require_http_methods("GET")
 def handler403(request, *args, **kwargs):
 	"""
 		handler403 view. Handle 403 Http error and render 403 error page.
