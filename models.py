@@ -60,5 +60,5 @@ class Keys(models.Model):
 		:field note: Must be <Notes>
 	"""
 
-	key = models.CharField(max_length=const.KEYS["key"])
+	key = models.CharField(max_length=const.KEYS["hex"])
 	note = models.ForeignKey(Notes, on_delete=models.CASCADE)
