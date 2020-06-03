@@ -1,4 +1,5 @@
 # Easynote
+![alt-text](https://github.com/LzOggar/Easynote/easynote.jpg)
 
 # Encryption
 * PBKDF2-HMAC used to derive a master key from your password,
