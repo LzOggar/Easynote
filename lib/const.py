@@ -4,7 +4,7 @@ AUTH = { "username":150, "email":254, "password":32 }
 # models
 PROFILES = { "salt":12 }
 NOTES = { "name":128, "items_per_page":10 }
-KEYS = { "key":32 }
+KEYS = { "key":32, "hex":128 }
 
 # Bleach
 BLEACH = { 
