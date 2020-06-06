@@ -11,100 +11,82 @@
 			background-repeat: no-repeat;
 			background-attachment: fixed;
 			background-size: cover;
-		}
-		
-		.container {
-			padding-top: 10%;
+			padding-top: 5%;
 		}
 
-		.col-6 {
-			padding-top: 2%;
+		.container {
+			width: 500px;
 			padding-bottom: 2%;
 			background-color: #343a40;
 			-webkit-box-shadow: 0px 0px 13px 2px rgba(0,0,0,0.75);
 			-moz-box-shadow: 0px 0px 13px 2px rgba(0,0,0,0.75);
 			box-shadow: 0px 0px 13px 2px rgba(0,0,0,0.75);
 		}
-
-		.blockquote span { font-weight: bold; font-size: 22px; }
 	</style>
 {% endblock %}
 
 {% block content %}
 	<div class="container">
-		<div class="row">
-			<div class="col"></div>
-			<div class="col-6">
-				<div class="row justify-content-between">
-					<div class="col"></div>
-					<div class="col-md-auto">
-						<blockquote class="blockquote text-center">
-							<img src="{% static 'img/logo.png' %}" width="60" height="55">
-							<span class="mb-0" style="color: #fff;">Easynote</span>
-							<footer class="blockquote-footer">Keep your data safe with encrypted note.</footer>
-						</blockquote>
-					</div>
-					<div class="col">
-						<button class="btn btn-link" onclick="window.open('/about/')">
-							<i class="fa fa-info-circle"></i>
-						</button>
+		<div class="row justify-content-center">
+			<blockquote class="blockquote text-center" style="margin: 0; padding-top: 5%;">
+				<img src="{% static 'img/logo.png' %}" width="60" height="55">
+				<h1><strong style="color: #fff;">Easynote</h1>
+				<footer class="blockquote-footer">Keep your data safe with encrypted note.</footer>
+			</blockquote>
+		</div>
+		<hr>
+		<div class="row justify-content-center" style="padding-top: 5%;">
+			<form method="post" action="">
+				{% csrf_token %}
+				{% for field in form %}
+					{% if field.name == "username" %}
+						<div class="row">
+							<div class="form-group">
+								<div class="input-group">
+							    	<div class="input-group-prepend">
+						    			<div class="input-group-text">
+						    				<i class="fa fa-user"></i>
+						    			</div>
+							    	</div>
+						    		{{ field }}
+						   		</div>
+						   	</div>
+						</div>
+					{% else %}
+						<div class="row">
+							<div class="form-group">
+								<div class="input-group">
+							    	<div class="input-group-prepend">
+						    			<div class="input-group-text">
+						    				<i class="fa fa-lock"></i>
+						    			</div>
+							    	</div>
+						    		{{ field }}
+						   		</div>
+						   	</div>
+						</div>
+					{% endif %}
+					{% if messages|length > 0 %}
+						{% for message in messages %}
+							{% if field.name == message.tags|xsplit:0 %}
+								<script type="text/javascript">
+									$("#id_{{ field.name }}").attr("data-toggle","tooltip");
+									$("#id_{{ field.name }}").attr("data-placement","top");
+									$("#id_{{ field.name }}").attr("data-html","true");
+									$("#id_{{ field.name }}").attr("title","<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>");
+									$("#id_{{ field.name }}").tooltip();
+								</script>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+				<div class="row justify-content-center">
+					<div class="form-group">
+						<button class="btn btn-primary" type="submit"><i class="fa fa-sign-in"></i> Login</button>
+						<button class="btn btn-secondary" type="button" onclick="window.location='/register/'"><i class="fa fa-user"></i> Register</button>
 					</div>
 				</div>
-				<hr>
-				<br>
-				<form method="post" action="">
-					{% csrf_token %}
-					{% for field in form %}
-						<div class="form-group row">
-							<div class="col"></div>
-							<div class="col-md-8">
-								{% if field.name == "username" %}
-									<div class="input-group">
-								    	<div class="input-group-prepend">
-							    			<div class="input-group-text">
-							    				<i class="fa fa-user"></i>
-							    			</div>
-								    	</div>
-							    		{{ field }}
-							   		</div>
-								{% else %}
-									<div class="input-group">
-								    	<div class="input-group-prepend">
-							    			<div class="input-group-text">
-							    				<i class="fa fa-lock"></i>
-							    			</div>
-								    	</div>
-							    		{{ field }}
-							   		</div>
-								{% endif %}
-								{% if messages|length > 0 %}
-									{% for message in messages %}
-										{% if field.name == message.tags|xsplit:0 %}
-											<script type="text/javascript">
-												$("#id_{{ field.name }}").attr("data-toggle","tooltip");
-												$("#id_{{ field.name }}").attr("data-placement","top");
-												$("#id_{{ field.name }}").attr("data-html","true");
-												$("#id_{{ field.name }}").attr("title","<span class='font-weight-bold'><i class='fa fa-close'></i> {{ message }}</span>");
-												$("#id_{{ field.name }}").tooltip();
-											</script>
-										{% endif %}
-									{% endfor %}
-								{% endif %}
-							</div>
-							<div class="col"></div>
-						</div>
-					{% endfor %}
-					<div class="form-group row">
-						<div class="col"></div>
-						<div class="col-md-auto">
-							<button class="btn btn-primary" type="submit"><i class="fa fa-sign-in"></i> Login</button>
-							<button class="btn btn-secondary" type="button" onclick="window.open('/register/')"><i class="fa fa-user"></i> Register</button>
-						</div>
-						<div class="col"></div>
-					</div>
-				</form>
-			</div>
-			<div class="col"></div>
+			</form>
 		</div>
 	</div>
 {% endblock %}

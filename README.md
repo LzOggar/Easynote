@@ -52,7 +52,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'Easynote/static')
 6. Add the following configuration to Test/urls.py file
 ```
 ...
-rom django.conf.urls import include, handler403, handler404, handler500
+from django.urls import path
+from django.conf.urls import include, handler403, handler404, handler500
 from Easynote import views
 
 handler403 = "Easynote.views.handler403"
@@ -64,7 +65,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),
-    path('about/', views.about, name='about'),
     path('dashboard/', include('Easynote.urls'))
 ]
 ```

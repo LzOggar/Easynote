@@ -186,17 +186,6 @@ def register(request):
 
 	return render(request, "registration/register.html", context)
 
-@require_http_methods("GET")
-def about(request):
-	"""
-		about view. Handle about page call GET.
-		:param request: Must be <HttpRequest>
-		:return: <HttpResponse> instance
-		:rtype: <HttpResponse>
-	"""
-
-	return render(request, "about.html", {})
-
 @login_required
 @require_http_methods("GET")
 def dashboard(request):
@@ -250,8 +239,8 @@ def create_new_note(request):
 		form = forms.NewNoteForm(data=request.POST)
 		if form.is_valid():
 			name = bleach.clean(form.cleaned_data["name"], tags=[], strip=True)
-			summary = bleach.clean(form.cleaned_data["summary"], tags=const.BLEACH["AUTHORIZED_TAGS"], 
-								   attributes=const.BLEACH["AUTHORIZED_ATTRIBUTES"], styles=const.BLEACH["AUTHORIZED_STYLES"], 
+			summary = bleach.clean(form.cleaned_data["summary"], tags=const.BLEACH["AUTHORIZED_TAGS"],
+								   attributes=const.BLEACH["AUTHORIZED_ATTRIBUTES"], styles=const.BLEACH["AUTHORIZED_STYLES"],
 								   strip=True)
 
 			notes = models.Notes.objects.filter(name=name, user=User.objects.get(username=request.user.username))
@@ -349,8 +338,8 @@ def edit_current_note(request, name):
 		# POST call
 		form = forms.EditNoteForm(data=request.POST)
 		if form.is_valid():
-			summary = bleach.clean(form.cleaned_data["summary"], tags=const.BLEACH["AUTHORIZED_TAGS"], 
-								   attributes=const.BLEACH["AUTHORIZED_ATTRIBUTES"], styles=const.BLEACH["AUTHORIZED_STYLES"], 
+			summary = bleach.clean(form.cleaned_data["summary"], tags=const.BLEACH["AUTHORIZED_TAGS"],
+								   attributes=const.BLEACH["AUTHORIZED_ATTRIBUTES"], styles=const.BLEACH["AUTHORIZED_STYLES"],
 								   strip=True)
 
 			if len(summary) > 0:
@@ -370,7 +359,7 @@ def edit_current_note(request, name):
 					# decrypt summary with symetric key
 					algorithm = aes.AdvancedEncryptionStandard(plaintext_key)
 					ciphersummary = algorithm.encrypt(summary.encode())
-					
+
 					note.summary = ciphersummary.hex()
 					note.updated_date = timezone.now()
 					note.changes = note.changes + 1
@@ -481,7 +470,7 @@ def export_current_note(request, name):
 
 	def render_to_pdf(template, context):
 		"""
-			render_to_pdf. 
+			render_to_pdf.
 			:param request: Must be <HttpRequest>
 			:return: PDF file.
 			:rtype: <HttpResponse>
@@ -535,7 +524,7 @@ def export_current_note(request, name):
 		# errors displayed with topper.js
 		messages.error(request, err, extra_tags="notes")
 		return HttpResponseRedirect(reverse("view_available_notes", args=()))
-	
+
 
 @login_required
 @require_http_methods("GET")
@@ -555,7 +544,7 @@ def search_note(request):
 				notes = models.Notes.objects.filter(name__contains=query, user=User.objects.get(username=request.user.username)).order_by("name")
 			else:
 				notes = models.Notes.objects.filter(user=User.objects.get(username=request.user.username)).order_by("name")
-			
+
 			notes = [ note.as_dict() for note in notes ]
 
 			context = { "notes" : notes }
@@ -565,7 +554,7 @@ def search_note(request):
 			# tag : notes
 			# errors displayed with topper.js
 			messages.error(request, "QUERY field is required.", extra_tags="notes")
-			
+
 	return HttpResponseRedirect(reverse("view_available_notes",args=()))
 
 @login_required
@@ -584,7 +573,7 @@ def view_current_profile(request):
 @require_http_methods("POST")
 def change_current_password(request):
 	"""
-		change_current_password view. Decrypt current keys then encrypt keys with new master key, 
+		change_current_password view. Decrypt current keys then encrypt keys with new master key,
 		update current user session and change the user password.
 		:param request: HttpRequest instance. Must be a HttpRequest class.
 		:return: HttpResponse instance.
@@ -620,7 +609,7 @@ def change_current_password(request):
 							algorithm = aes.AdvancedEncryptionStandard(new_master_key)
 
 							cipherkey = algorithm.encrypt(plaintext_key)
-							key.key = cipherkey.hex() 
+							key.key = cipherkey.hex()
 							key.save()
 
 						user.set_password(new_password)
@@ -674,7 +663,7 @@ def export_all_notes(request):
 			summary = algorithm.decrypt(ciphersummary)
 
 			data["notes"].append({ "name":note.name,
-								   "summary":bleach.clean(summary.decode(), tags=[], strip=True), 
+								   "summary":bleach.clean(summary.decode(), tags=[], strip=True),
 								   "published_date":timezone.datetime.strftime(note.published_date, format="%b. %d, %Y, %H:%m %p."),
 								   "updated_date":timezone.datetime.strftime(note.updated_date, format="%b. %d, %Y, %H:%m %p."),
 								   "author":request.user.username })
@@ -693,7 +682,7 @@ def export_all_notes(request):
 		# errors displayed with topper.js
 		messages.error(request, "No notes available." , extra_tags="profiles")
 		return HttpResponseRedirect(reverse("view_current_profile", args=()))
-	
+
 
 @login_required
 @require_http_methods("POST")
@@ -768,5 +757,5 @@ def get_statistics(request):
 			# tag : notes
 			# errors displayed with topper.js
 			messages.error(request, "MONTHS field is required.", extra_tags="statistics")
-			
+
 	return HttpResponseRedirect(reverse("dashboard",args=()))
