@@ -70,12 +70,12 @@ urlpatterns = [
 ```
 7. Create the database db.sqlite3
 ```
-python manage.py makemigrations Easynote
-python manage.py migrate
+python3 manage.py makemigrations Easynote
+python3 manage.py migrate
 ```
 8. Run the test
 ```
-python manage.py runserver
+python3 manage.py runserver
 ```
 9. Open your browser then browse to "localhost:8000"
 
